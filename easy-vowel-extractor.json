@@ -1,0 +1,80 @@
+{
+  "name": "Easy Vowel Extractor",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "v1",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "s1",
+              "name": "sentence",
+              "value": "Agentic AI is changing how we automate work",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "v2",
+      "name": "Set Sentence",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const sentence = $input.first().json.sentence;\nconst vowels = (sentence.match(/[aeiou]/gi) || []);\nconst counts = { a: 0, e: 0, i: 0, o: 0, u: 0 };\nvowels.forEach(v => counts[v.toLowerCase()]++);\nreturn [{ json: {\n  sentence,\n  vowels: vowels.join(' '),\n  total_vowels: vowels.length,\n  counts\n} }];"
+      },
+      "id": "v3",
+      "name": "Extract Vowels",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Sentence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Sentence": {
+      "main": [
+        [
+          {
+            "node": "Extract Vowels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
